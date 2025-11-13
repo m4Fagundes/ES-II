@@ -2,7 +2,7 @@
 Testes para os endpoints Públicos (/planos)
 """
 from fastapi.testclient import TestClient
-from provedor_api.main import app 
+from api.main import app 
 
 client = TestClient(app)
 

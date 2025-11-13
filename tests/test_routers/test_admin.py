@@ -3,7 +3,7 @@ Testes para os endpoints de Admin (/admin/planos)
 """
 from fastapi.testclient import TestClient
 # Agora importamos a 'app' da nova localização
-from provedor_api.main import app 
+from api.main import app 
 
 # --- Configuração ---
 client = TestClient(app)
