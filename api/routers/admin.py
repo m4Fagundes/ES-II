@@ -3,7 +3,7 @@ Rotas para o gerenciamento de Planos (CRUD).
 Acesso restrito apenas a administradores.
 """
 from fastapi import APIRouter, Depends, HTTPException, status
-from api import models, db, auth
+from api import models, database, auth
 
 # O prefixo '/planos' será combinado com o prefixo '/admin' de main.py
 router = APIRouter(
@@ -19,7 +19,7 @@ router = APIRouter(
 async def cria_plano(plano: models.PlanoCreate):
     """Cria um novo plano de internet (apenas Admin)."""
     # A validação de admin já foi feita pela dependência
-    return db.create_novo_plano(plano)
+    return database.create_novo_plano(plano)
 
 
 @router.put("/{plano_id}", response_model=models.Plano)
@@ -45,7 +45,7 @@ async def altera_plano(plano_id: int, plano_data: models.PlanoUpdate):
 @router.delete("/{plano_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def deleta_plano(plano_id: int):
     """Deleta um plano existente (apenas Admin)."""
-    deletado = db.delete_plano_by_id(plano_id)
+    deletado = database.delete_plano_by_id(plano_id)
     
     if not deletado:
         raise HTTPException(
