@@ -1,0 +1,50 @@
+# Nome do Workflow
+name: CI - Pipeline de Testes Python
+
+# Gatilhos (Triggers)
+# Este workflow roda em pushes e pull requests para as branches main e develop
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+  # Job único chamado 'test'
+  test:
+    # Rodar no sistema operacional mais recente do Ubuntu
+    runs-on: ubuntu-latest
+
+    strategy:
+      # Definir a versão do Python que queremos testar
+      # Você pode adicionar mais versões (ex: 3.9, 3.11) para testar compatibilidade
+      matrix:
+        python-version: ["3.10"]
+
+    steps:
+      # 1. Checkout do Repositório
+      # Baixa o código do seu repositório para a máquina virtual do CI
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Configurar o ambiente Python
+      # Instala a versão do Python definida na matriz (matrix)
+      - name: Configurar Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip' # Ativa o cache do pip para instalações mais rápidas
+
+      # 3. Instalar Dependências
+      # Lê o arquivo requirements.txt e instala tudo
+      - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 4. Rodar os Testes com Pytest
+      # Executa o comando pytest. O pytest encontrará automaticamente os arquivos tests/test_*.py
+      # O PYTHONPATH=. garante que o python possa encontrar 'api' e 'tests'
+      - name: Rodar Pytest
+        run: |
+          PYTHONPATH=. pytest

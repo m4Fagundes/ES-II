@@ -1,0 +1,49 @@
+# ---- VENV ----
+venv/
+.env/
+.venv/
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de virtualenv
+pip-selfcheck.json
+
+# ---- Logs ----
+*.log
+logs/
+
+# ---- Cache ----
+*.cache
+.cache/
+.pytest_cache/
+.tox/
+.mypy_cache/
+.dmypy.json
+
+# ---- IDEs ----
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# ---- Distribuição ----
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---- Jupyter ----
+.ipynb_checkpoints/
+
+# ---- Envs ----
+.env
+.env.* 
+dotenv.*
+
+# ---- Outros ----
+*.sqlite3
+.DS_Store
