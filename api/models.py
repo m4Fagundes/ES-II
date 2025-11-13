@@ -4,7 +4,7 @@ Camada de Modelos (Data Transfer Objects).
 Define a "forma" dos dados que entram e saem da API, garantindo
 a validação e os limites do sistema (Clean Architecture).
 """
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict # Importação do ConfigDict
 from typing import Optional
 
 # --- Modelos de Plano ---
@@ -40,6 +40,5 @@ class Assinatura(BaseModel):
     plano_id: int
     status: str = "ativo"
 
-    class Config:
-        # Permite que o modelo seja criado a partir de um objeto
-        from_attributes = True
+    # CORREÇÃO Pydantic: Usando ConfigDict em vez de class Config
+    model_config = ConfigDict(from_attributes=True)

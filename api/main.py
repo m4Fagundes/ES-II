@@ -7,9 +7,10 @@ Este arquivo é responsável por:
 """
 import logging
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware  # <--- 1. IMPORTAÇÃO ADICIONADA
+from fastapi.middleware.cors import CORSMiddleware
 
 # Importa seus arquivos de rotas
+# Assumimos que o roteador de planos (público) também existe
 from .routers import planos, usuarios, admin 
 
 # Configuração de logging (boa prática)
@@ -23,38 +24,33 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# --- [INÍCIO DA CORREÇÃO CORS] ---
-# Define as "origens" (seu frontend) que podem acessar esta API.
-# O Live Server do VS Code geralmente usa a porta 5500.
+# --- Configuração CORS ---
 origins = [
-    "http://127.0.0.1:5500",  # Porta padrão do Live Server
+    "http://127.0.0.1:5500", 
     "http://localhost:5500",
-    "http://127.0.0.1:8080",  # Outra porta comum
+    "http://127.0.0.1:8080", 
     "http://localhost:8080",
-    # Você também pode abrir o index.html como um arquivo (file://)
-    # Nesse caso, para testes locais, "*" pode ser necessário
-    # se as portas acima não funcionarem.
-    # "*" 
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,       # Permite as origens da lista
-    allow_credentials=True,    # Permite envio de credenciais (como cookies ou tokens)
-    allow_methods=["*"],         # Permite todos os métodos (GET, POST, PUT, DELETE)
-    allow_headers=["*"],         # Permite todos os cabeçalhos (incluindo o nosso 'X-Token')
+    allow_origins=origins, 
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"], 
 )
-# --- [FIM DA CORREÇÃO CORS] ---
+# --- Fim Configuração CORS ---
 
 
 # --- Inclusão dos Routers ---
-# Adiciona os endpoints que estão nos outros arquivos
 logger.info("Incluindo router de planos (público)")
-app.include_router(planos.router, tags=["Planos (Público)"])
+# Assumindo que o router de planos públicos não tem prefixo e define rotas como /planos
+app.include_router(planos.router, tags=["Planos (Público)"]) 
 
 logger.info("Incluindo router de usuários (assinatura)")
 app.include_router(usuarios.router, tags=["Usuários (Assinatura)"])
 
+# INCLUSÃO CORRETA: /admin + /planos (do admin.py) = /admin/planos
 logger.info("Incluindo router de admin (gerenciamento)")
 app.include_router(admin.router, prefix="/admin", tags=["Admin (Gerenciamento)"])
 
