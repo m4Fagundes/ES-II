@@ -1,0 +1,191 @@
+<div class="h-full flex flex-col items-center justify-center py-6 animate-fade-in relative bg-slate-100/50">
+    
+    <!-- Card Principal -->
+    <div class="bg-white p-8 md:p-12 rounded-[2.5rem] shadow-xl shadow-slate-300/30 border border-slate-200/80 w-full max-w-lg relative overflow-hidden group transition-all duration-500 hover:shadow-brand-100/30 z-10">
+        
+        <!-- Header -->
+        <div class="text-center mb-10 relative z-10">
+            <h3 class="text-3xl font-black text-slate-800 tracking-tight mb-1">Velocímetro</h3>
+            <div class="flex items-center justify-center gap-2 text-sm font-medium text-slate-400">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                Servidor Cloudflare Edge
+            </div>
+        </div>
+
+        <!-- SVG Gauge -->
+        <div class="relative w-full h-64 flex justify-center items-end mb-8">
+            <svg viewBox="0 0 200 110" class="w-full h-full drop-shadow-xl transform transition-transform duration-500 group-hover:scale-105">
+                <defs>
+                    <linearGradient id="grad-down" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#3b82f6" />
+                        <stop offset="100%" stop-color="#2563eb" />
+                    </linearGradient>
+                    <linearGradient id="grad-up" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#a855f7" />
+                        <stop offset="100%" stop-color="#7c3aed" />
+                    </linearGradient>
+                </defs>
+                <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="#f1f5f9" stroke-width="12" stroke-linecap="round" />
+                <path id="gauge-arc" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="url(#grad-down)" stroke-width="12" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="251.2" class="transition-all duration-[800ms] ease-out" style="filter: drop-shadow(0px 0px 4px rgba(59, 130, 246, 0.3));" />
+                <g id="needle" class="needle transition-transform duration-[400ms] ease-out will-change-transform" style="transform: translateX(100px) translateY(100px) rotate(-90deg);">
+                    <circle cx="0" cy="0" r="8" fill="#1e293b" stroke="white" stroke-width="3" class="shadow-md"/>
+                    <path d="M -4 0 L 0 -88 L 4 0 Z" fill="#1e293b" />
+                </g>
+            </svg>
+            <div class="absolute bottom-0 left-0 right-0 text-center transform translate-y-2">
+                <div class="flex justify-center items-baseline">
+                    <span id="speed-val" class="text-7xl font-black text-slate-800 tracking-tighter tabular-nums leading-none transition-all">0.0</span>
+                </div>
+                <div id="speed-unit" class="text-brand-600 font-extrabold text-sm uppercase tracking-widest mt-2">Mbps</div>
+            </div>
+        </div>
+
+        <!-- Botão de Ação (CORRIGIDO) -->
+        <!-- Removi gradientes complexos e usei cores sólidas do Tailwind padrão (blue-600) para garantir visibilidade -->
+        <button id="btn-start-test" onclick="runSpeedTest()" class="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg shadow-blue-200 transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-3 cursor-pointer group/btn overflow-hidden relative">
+            <!-- Brilho sutil no hover -->
+            <div class="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300"></div>
+            
+            <!-- Conteúdo do Botão -->
+            <i class="ph-bold ph-play text-xl relative z-10"></i> 
+            <span class="relative z-10 text-lg tracking-wide">INICIAR TESTE</span>
+        </button>
+
+        <!-- Grid de Resultados -->
+        <div class="grid grid-cols-3 gap-4 mt-10 pt-8 border-t border-slate-100 relative">
+            <div class="text-center group/item">
+                <div class="text-[10px] font-bold text-slate-400 uppercase mb-1 tracking-wider group-hover/item:text-slate-600 transition">Ping</div>
+                <div class="flex justify-center items-baseline gap-1">
+                    <span id="res-ping" class="text-2xl font-black text-slate-700">--</span>
+                    <span class="text-xs text-slate-400 font-medium">ms</span>
+                </div>
+            </div>
+            <div class="text-center border-x border-slate-100 group/item relative">
+                <div id="indicator-down" class="absolute top-0 right-4 w-2 h-2 bg-blue-500 rounded-full opacity-0 transition-opacity"></div>
+                <div class="text-[10px] font-bold text-blue-500 uppercase mb-1 tracking-wider group-hover/item:text-blue-600 transition">Download</div>
+                <div class="flex justify-center items-baseline gap-1">
+                    <span id="res-down" class="text-2xl font-black text-blue-600">--</span>
+                    <span class="text-xs text-blue-300 font-medium">Mbps</span>
+                </div>
+            </div>
+            <div class="text-center group/item relative">
+                <div id="indicator-up" class="absolute top-0 right-4 w-2 h-2 bg-purple-500 rounded-full opacity-0 transition-opacity"></div>
+                <div class="text-[10px] font-bold text-purple-500 uppercase mb-1 tracking-wider group-hover/item:text-purple-600 transition">Upload</div>
+                <div class="flex justify-center items-baseline gap-1">
+                    <span id="res-up" class="text-2xl font-black text-purple-600">--</span>
+                    <span class="text-xs text-purple-300 font-medium">Mbps</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Decor -->
+    <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-purple-100/40 rounded-full blur-3xl pointer-events-none -z-10"></div>
+</div>
+
+<!-- Script (Lógica Mantida) -->
+<script>
+    var needle = document.getElementById('needle');
+    var arc = document.getElementById('gauge-arc');
+    var valDisplay = document.getElementById('speed-val');
+    var btn = document.getElementById('btn-start-test');
+    
+    window.updateGaugeUI = function(val, type) {
+        const maxScale = 100; 
+        const percent = Math.min(val / maxScale, 1);
+        const angle = (percent * 180) - 90;
+        const dashOffset = 251.2 - (251.2 * percent);
+        
+        if(needle) needle.style.transform = `translateX(100px) translateY(100px) rotate(${angle}deg)`;
+        
+        if(arc) {
+            arc.style.strokeDashoffset = dashOffset;
+            if (type === 'upload') {
+                arc.style.stroke = 'url(#grad-up)';
+                arc.style.filter = 'drop-shadow(0px 0px 4px rgba(124, 58, 237, 0.3))';
+            } else {
+                arc.style.stroke = 'url(#grad-down)';
+                arc.style.filter = 'drop-shadow(0px 0px 4px rgba(59, 130, 246, 0.3))';
+            }
+        }
+        if(valDisplay) valDisplay.innerText = val.toFixed(1);
+    }
+
+    window.runSpeedTest = async () => {
+        const API_LOCAL = 'http://127.0.0.1:8000';
+        const API_EXT = 'https://speed.cloudflare.com/__down?bytes=10000000';
+        
+        btn.disabled = true;
+        btn.classList.add('opacity-70', 'cursor-wait');
+        btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin text-xl"></i> <span class="ml-2">Testando...</span>';
+        
+        document.getElementById('res-ping').innerText = '--';
+        document.getElementById('res-down').innerText = '--';
+        document.getElementById('res-up').innerText = '--';
+        updateGaugeUI(0, 'download');
+
+        try {
+            const start = performance.now();
+            await fetch(`${API_LOCAL}/`); 
+            const ping = (performance.now() - start).toFixed(0);
+            document.getElementById('res-ping').innerText = ping;
+            
+            document.getElementById('indicator-down').classList.remove('opacity-0');
+            let totalBytes = 0;
+            const startTime = Date.now();
+            const endTime = startTime + 8000;
+            
+            while(Date.now() < endTime) {
+                try {
+                    const r = await fetch(`${API_EXT}&t=${Date.now()}`);
+                    const b = await r.blob(); 
+                    totalBytes += b.size;
+                    const duration = (Date.now() - startTime) / 1000;
+                    const mbps = (totalBytes * 8) / duration / 1048576;
+                    updateGaugeUI(mbps, 'download');
+                } catch(e) { break; }
+            }
+            const finalDown = (totalBytes * 8) / ((Date.now() - startTime)/1000) / 1048576;
+            document.getElementById('res-down').innerText = finalDown.toFixed(1);
+            document.getElementById('indicator-down').classList.add('opacity-0');
+
+            updateGaugeUI(0, 'download');
+            await new Promise(r => setTimeout(r, 800));
+
+            document.getElementById('indicator-up').classList.remove('opacity-0');
+            const upStart = Date.now();
+            const upEnd = upStart + 8000;
+            let upBytes = 0;
+            const chunk = new Uint8Array(512*1024);
+
+            while(Date.now() < upEnd) {
+                await fetch(`${API_LOCAL}/speedtest/upload`, {method:'POST', body:chunk});
+                upBytes += chunk.byteLength;
+                const duration = (Date.now() - upStart) / 1000;
+                const mbps = (upBytes * 8) / duration / 1048576;
+                updateGaugeUI(mbps, 'upload');
+            }
+            const finalUp = ((upBytes*8)/((Date.now()-upStart)/1000)/1048576);
+            document.getElementById('res-up').innerText = finalUp.toFixed(1);
+            document.getElementById('indicator-up').classList.add('opacity-0');
+            
+            updateGaugeUI(finalDown, 'download');
+
+        } catch(e) { 
+            console.error(e);
+            alert('Erro ao realizar teste.');
+        } finally {
+            // RESET DO BOTÃO
+            document.getElementById('indicator-down').classList.add('opacity-0');
+            document.getElementById('indicator-up').classList.add('opacity-0');
+            btn.disabled = false;
+            btn.classList.remove('opacity-70', 'cursor-wait');
+            // Garante que o texto volta e fica visível
+            btn.innerHTML = '<i class="ph-bold ph-arrow-counter-clockwise text-xl relative z-10"></i> <span class="ml-2 relative z-10">TESTAR NOVAMENTE</span>';
+        }
+    };
+</script>
