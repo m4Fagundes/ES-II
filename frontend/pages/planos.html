@@ -1,0 +1,495 @@
+<div class="space-y-6 animate-fade-in pb-10">
+    
+    <!-- Cabeçalho -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h3 class="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-3">
+                <div class="w-10 h-10 bg-red-100 text-red-600 rounded-xl flex items-center justify-center">
+                    <i class="ph-bold ph-shield-warning text-xl"></i>
+                </div>
+                Painel Administrativo
+            </h3>
+            <p class="text-slate-500 mt-1">Gerencie os planos disponíveis para os clientes</p>
+        </div>
+        
+        <button onclick="openPlanModal()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-lg shadow-brand-300/50 transition-all flex items-center gap-2 hover:-translate-y-0.5 active:scale-95">
+            <i class="ph-bold ph-plus-circle text-xl"></i>
+            Novo Plano
+        </button>
+    </div>
+
+    <!-- Estatísticas Rápidas -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase">Total de Planos</span>
+                <div class="w-8 h-8 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                    <i class="ph-bold ph-stack"></i>
+                </div>
+            </div>
+            <div id="stat-total" class="text-3xl font-black text-slate-800">0</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase">Plano Mais Rápido</span>
+                <div class="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                    <i class="ph-bold ph-lightning"></i>
+                </div>
+            </div>
+            <div id="stat-fastest" class="text-3xl font-black text-slate-800">--</div>
+            <div class="text-xs text-slate-400 mt-1">Mega</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase">Menor Preço</span>
+                <div class="w-8 h-8 bg-green-100 text-green-600 rounded-lg flex items-center justify-center">
+                    <i class="ph-bold ph-currency-circle-dollar"></i>
+                </div>
+            </div>
+            <div id="stat-cheapest" class="text-3xl font-black text-slate-800">--</div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-slate-400 uppercase">Maior Preço</span>
+                <div class="w-8 h-8 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center">
+                    <i class="ph-bold ph-trend-up"></i>
+                </div>
+            </div>
+            <div id="stat-expensive" class="text-3xl font-black text-slate-800">--</div>
+        </div>
+    </div>
+
+    <!-- Tabela de Planos -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-6 border-b border-slate-100">
+            <h4 class="font-bold text-slate-800 flex items-center gap-2">
+                <i class="ph-bold ph-list text-brand-600"></i>
+                Planos Cadastrados
+            </h4>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-slate-50 border-b border-slate-200">
+                    <tr>
+                        <th class="text-left py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">ID</th>
+                        <th class="text-left py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Nome</th>
+                        <th class="text-left py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Velocidade</th>
+                        <th class="text-left py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Preço</th>
+                        <th class="text-left py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+                        <th class="text-right py-4 px-6 text-xs font-bold text-slate-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="plans-table-body" class="divide-y divide-slate-100">
+                    <!-- Skeleton Loader -->
+                    <tr class="animate-pulse">
+                        <td class="py-4 px-6"><div class="h-4 bg-slate-200 rounded w-8"></div></td>
+                        <td class="py-4 px-6"><div class="h-4 bg-slate-200 rounded w-32"></div></td>
+                        <td class="py-4 px-6"><div class="h-4 bg-slate-200 rounded w-20"></div></td>
+                        <td class="py-4 px-6"><div class="h-4 bg-slate-200 rounded w-24"></div></td>
+                        <td class="py-4 px-6"><div class="h-4 bg-slate-200 rounded w-16"></div></td>
+                        <td class="py-4 px-6"><div class="h-4 bg-slate-200 rounded w-20 ml-auto"></div></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Criar/Editar Plano -->
+<div id="plan-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl transform scale-95 transition-transform duration-300 overflow-hidden" id="plan-modal-box">
+        
+        <!-- Header do Modal -->
+        <div class="bg-gradient-to-r from-brand-600 to-brand-700 p-6 text-white">
+            <h3 id="modal-title" class="text-2xl font-bold flex items-center gap-3">
+                <i class="ph-bold ph-note-pencil text-3xl"></i>
+                Novo Plano
+            </h3>
+            <p class="text-brand-100 text-sm mt-1">Preencha as informações abaixo</p>
+        </div>
+
+        <!-- Formulário -->
+        <form id="plan-form" class="p-6 space-y-5">
+            <input type="hidden" id="plan-id">
+            
+            <!-- Nome do Plano -->
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">
+                    <i class="ph-bold ph-tag text-brand-600"></i> Nome do Plano
+                </label>
+                <input type="text" id="plan-name" required 
+                    placeholder="Ex: Fibra Max"
+                    class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                <p class="text-xs text-slate-400 mt-1">Nome comercial que aparecerá para os clientes</p>
+            </div>
+
+            <!-- Velocidade -->
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">
+                    <i class="ph-bold ph-gauge text-brand-600"></i> Velocidade (Mbps)
+                </label>
+                <div class="relative">
+                    <input type="number" id="plan-speed" required min="1" step="1"
+                        placeholder="Ex: 500"
+                        class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                    <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">Mega</span>
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Velocidade de download e upload (simétrica)</p>
+            </div>
+
+            <!-- Preço -->
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2">
+                    <i class="ph-bold ph-currency-circle-dollar text-brand-600"></i> Preço Mensal (R$)
+                </label>
+                <div class="relative">
+                    <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-medium">R$</span>
+                    <input type="number" id="plan-price" required min="0.01" step="0.01"
+                        placeholder="99.90"
+                        class="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition">
+                </div>
+                <p class="text-xs text-slate-400 mt-1">Valor cobrado mensalmente do cliente</p>
+            </div>
+
+            <!-- Botões de Ação -->
+            <div class="flex gap-3 pt-4">
+                <button type="button" onclick="closePlanModal()" 
+                    class="flex-1 px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-bold transition">
+                    Cancelar
+                </button>
+                <button type="submit" 
+                    class="flex-1 px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white rounded-xl font-bold shadow-lg shadow-brand-300/50 transition flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-check-circle"></i>
+                    Salvar Plano
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Toast de Notificação -->
+<div id="toast" class="fixed top-6 right-6 z-[60] hidden">
+    <div class="bg-white border-l-4 rounded-xl shadow-xl p-4 min-w-[300px] animate-fade-in" id="toast-content">
+        <div class="flex items-center gap-3">
+            <div id="toast-icon" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0"></div>
+            <div class="flex-1">
+                <p id="toast-message" class="font-bold text-slate-800"></p>
+                <p id="toast-description" class="text-xs text-slate-500 mt-0.5"></p>
+            </div>
+            <button onclick="hideToast()" class="text-slate-400 hover:text-slate-600">
+                <i class="ph-bold ph-x text-xl"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function initAdmin() {
+    const API_URL = 'http://127.0.0.1:8000';
+    const token = localStorage.getItem('token');
+    
+    // Carrega planos ao iniciar
+    loadPlans();
+
+    // Função para carregar planos
+    async function loadPlans() {
+        try {
+            const response = await fetch(`${API_URL}/planos`, {
+                headers: { 'X-Token': token }
+            });
+            
+            if (!response.ok) throw new Error('Erro ao carregar planos');
+            
+            const plans = await response.json();
+            renderPlansTable(plans);
+            updateStats(plans);
+            
+        } catch (error) {
+            console.error(error);
+            showToast('Erro ao carregar planos', 'Tente recarregar a página', 'error');
+        }
+    }
+
+    // Renderiza tabela de planos
+    function renderPlansTable(plans) {
+        const tbody = document.getElementById('plans-table-body');
+        
+        if (!plans || plans.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="py-12 text-center">
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
+                                <i class="ph-bold ph-stack text-3xl text-slate-400"></i>
+                            </div>
+                            <p class="text-slate-500 font-medium">Nenhum plano cadastrado</p>
+                            <button onclick="openPlanModal()" class="text-brand-600 hover:text-brand-700 font-bold text-sm">
+                                Criar primeiro plano
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        const rows = plans.map(plan => {
+            const isActive = window.appData?.assinatura?.plano_id === plan.id;
+            
+            return `
+                <tr class="hover:bg-slate-50 transition group">
+                    <td class="py-4 px-6">
+                        <span class="font-mono text-sm font-bold text-slate-600">#${plan.id}</span>
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="font-bold text-slate-800">${plan.nome}</div>
+                        ${isActive ? '<span class="inline-block bg-green-100 text-green-700 text-[10px] font-bold px-2 py-0.5 rounded mt-1">EM USO</span>' : ''}
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center gap-2">
+                            <i class="ph-fill ph-arrow-up-right text-brand-600"></i>
+                            <span class="font-bold text-slate-700">${plan.velocidade_mbps}</span>
+                            <span class="text-xs text-slate-400">Mega</span>
+                        </div>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="font-bold text-slate-700">R$ ${plan.preco_mensal.toFixed(2).replace('.', ',')}</span>
+                        <span class="text-xs text-slate-400">/mês</span>
+                    </td>
+                    <td class="py-4 px-6">
+                        <span class="inline-flex items-center gap-1.5 bg-green-100 text-green-700 text-xs font-bold px-2.5 py-1 rounded-full">
+                            <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span>
+                            Ativo
+                        </span>
+                    </td>
+                    <td class="py-4 px-6">
+                        <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="editPlan(${plan.id})" 
+                                class="p-2 hover:bg-blue-50 text-blue-600 rounded-lg transition" title="Editar">
+                                <i class="ph-bold ph-pencil-simple text-lg"></i>
+                            </button>
+                            <button onclick="deletePlan(${plan.id}, '${plan.nome}')" 
+                                class="p-2 hover:bg-red-50 text-red-600 rounded-lg transition" title="Excluir">
+                                <i class="ph-bold ph-trash text-lg"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        tbody.innerHTML = rows;
+    }
+
+    // Atualiza estatísticas
+    function updateStats(plans) {
+        if (!plans || plans.length === 0) return;
+
+        document.getElementById('stat-total').textContent = plans.length;
+        
+        const fastest = Math.max(...plans.map(p => p.velocidade_mbps));
+        document.getElementById('stat-fastest').textContent = fastest;
+        
+        const cheapest = Math.min(...plans.map(p => p.preco_mensal));
+        document.getElementById('stat-cheapest').textContent = `R$ ${cheapest.toFixed(2)}`;
+        
+        const expensive = Math.max(...plans.map(p => p.preco_mensal));
+        document.getElementById('stat-expensive').textContent = `R$ ${expensive.toFixed(2)}`;
+    }
+
+    // Abre modal de criação
+    window.openPlanModal = function() {
+        document.getElementById('plan-id').value = '';
+        document.getElementById('plan-name').value = '';
+        document.getElementById('plan-speed').value = '';
+        document.getElementById('plan-price').value = '';
+        document.getElementById('modal-title').innerHTML = '<i class="ph-bold ph-plus-circle text-3xl"></i> Novo Plano';
+        
+        const modal = document.getElementById('plan-modal');
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modal.classList.remove('opacity-0');
+            document.getElementById('plan-modal-box').classList.remove('scale-95');
+        }, 10);
+    };
+
+    // Fecha modal
+    window.closePlanModal = function() {
+        const modal = document.getElementById('plan-modal');
+        modal.classList.add('opacity-0');
+        document.getElementById('plan-modal-box').classList.add('scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 300);
+    };
+
+    // Editar plano
+    window.editPlan = async function(planId) {
+        try {
+            const response = await fetch(`${API_URL}/planos/${planId}`, {
+                headers: { 'X-Token': token }
+            });
+            
+            if (!response.ok) throw new Error('Plano não encontrado');
+            
+            const plan = await response.json();
+            
+            document.getElementById('plan-id').value = plan.id;
+            document.getElementById('plan-name').value = plan.nome;
+            document.getElementById('plan-speed').value = plan.velocidade_mbps;
+            document.getElementById('plan-price').value = plan.preco_mensal;
+            document.getElementById('modal-title').innerHTML = '<i class="ph-bold ph-note-pencil text-3xl"></i> Editar Plano';
+            
+            openPlanModal();
+            
+        } catch (error) {
+            console.error(error);
+            showToast('Erro', 'Não foi possível carregar o plano', 'error');
+        }
+    };
+
+    // Deletar plano
+    window.deletePlan = function(planId, planName) {
+        if (!confirm(`Tem certeza que deseja excluir o plano "${planName}"?\n\nEsta ação não pode ser desfeita.`)) {
+            return;
+        }
+
+        fetch(`${API_URL}/admin/planos/${planId}`, {
+            method: 'DELETE',
+            headers: { 'X-Token': token }
+        })
+        .then(response => {
+            if (response.status === 204) {
+                showToast('Plano excluído!', `"${planName}" foi removido com sucesso`, 'success');
+                loadPlans();
+            } else {
+                throw new Error('Erro ao excluir');
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            showToast('Erro', 'Não foi possível excluir o plano', 'error');
+        });
+    };
+
+    // Submit do formulário
+    document.getElementById('plan-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const planId = document.getElementById('plan-id').value;
+        const planData = {
+            nome: document.getElementById('plan-name').value.trim(),
+            velocidade_mbps: parseInt(document.getElementById('plan-speed').value),
+            preco_mensal: parseFloat(document.getElementById('plan-price').value)
+        };
+
+        // Validações
+        if (!planData.nome) {
+            showToast('Campo obrigatório', 'Preencha o nome do plano', 'error');
+            return;
+        }
+        if (planData.velocidade_mbps <= 0) {
+            showToast('Valor inválido', 'A velocidade deve ser maior que zero', 'error');
+            return;
+        }
+        if (planData.preco_mensal <= 0) {
+            showToast('Valor inválido', 'O preço deve ser maior que zero', 'error');
+            return;
+        }
+
+        try {
+            const isEdit = !!planId;
+            const url = isEdit 
+                ? `${API_URL}/admin/planos/${planId}` 
+                : `${API_URL}/admin/planos/`;
+            
+            const method = isEdit ? 'PUT' : 'POST';
+            
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Token': token
+                },
+                body: JSON.stringify(planData)
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Erro ao salvar plano');
+            }
+
+            const savedPlan = await response.json();
+            
+            showToast(
+                isEdit ? 'Plano atualizado!' : 'Plano criado!',
+                `"${savedPlan.nome}" foi ${isEdit ? 'atualizado' : 'criado'} com sucesso`,
+                'success'
+            );
+            
+            closePlanModal();
+            loadPlans();
+            
+            // Recarrega dados globais se existir a função
+            if (typeof window.loadUserData === 'function') {
+                await window.loadUserData();
+            }
+            
+        } catch (error) {
+            console.error(error);
+            showToast('Erro ao salvar', error.message, 'error');
+        }
+    });
+
+    // Sistema de Toast
+    window.showToast = function(message, description, type = 'info') {
+        const toast = document.getElementById('toast');
+        const toastContent = document.getElementById('toast-content');
+        const icon = document.getElementById('toast-icon');
+        const msg = document.getElementById('toast-message');
+        const desc = document.getElementById('toast-description');
+
+        // Define cores e ícones baseado no tipo
+        const types = {
+            success: {
+                border: 'border-green-500',
+                bg: 'bg-green-100',
+                text: 'text-green-600',
+                icon: 'ph-fill ph-check-circle'
+            },
+            error: {
+                border: 'border-red-500',
+                bg: 'bg-red-100',
+                text: 'text-red-600',
+                icon: 'ph-fill ph-x-circle'
+            },
+            info: {
+                border: 'border-blue-500',
+                bg: 'bg-blue-100',
+                text: 'text-blue-600',
+                icon: 'ph-fill ph-info'
+            }
+        };
+
+        const config = types[type] || types.info;
+
+        toastContent.className = `bg-white rounded-xl shadow-xl p-4 min-w-[300px] animate-fade-in border-l-4 ${config.border}`;
+        icon.className = `w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${config.bg} ${config.text}`;
+        icon.innerHTML = `<i class="${config.icon} text-xl"></i>`;
+        msg.textContent = message;
+        desc.textContent = description;
+
+        toast.classList.remove('hidden');
+        
+        // Auto-hide após 5 segundos
+        setTimeout(() => hideToast(), 5000);
+    };
+
+    window.hideToast = function() {
+        const toast = document.getElementById('toast');
+        toast.classList.add('hidden');
+    };
+})();
+</script>
