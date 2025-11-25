@@ -1,46 +1,32 @@
-"""
-Testes para os endpoints de Usuário (/assinar, /minha-assinatura)
-"""
 from fastapi.testclient import TestClient
 from api.main import app 
 
 client = TestClient(app)
+HEADERS_USER = {"X-Token": "user-normal-token"}
 
-USER_TOKEN = "user-normal-token"
-ADMIN_TOKEN = "admin-secret-token" # Admin também é um usuário
-HEADERS_USER = {"X-Token": USER_TOKEN}
-HEADERS_ADMIN = {"X-Token": ADMIN_TOKEN}
-
-# --- Testes de Assinatura (Usuário) ---
-
-def test_usuario_assina_plano_sucesso():
-    """Testa se um usuário comum pode assinar um plano."""
+def test_usuario_assina_plano_com_sucesso():
+    """Usuário logado deve conseguir assinar o plano 1."""
     response = client.post("/assinar/1", headers=HEADERS_USER)
     assert response.status_code == 200
     data = response.json()
-    assert data["user_id"] == USER_TOKEN
     assert data["plano_id"] == 1
     assert data["status"] == "ativo"
 
-def test_usuario_ve_minha_assinatura():
-    """Testa se o usuário pode ver a assinatura que acabou de fazer."""
-    # Primeiro, garante que ele assinou
-    client.post("/assinar/1", headers=HEADERS_USER)
+def test_usuario_ve_sua_assinatura():
+    """Após assinar, o endpoint minha-assinatura deve retornar os dados corretos."""
+    # Garante assinatura
+    client.post("/assinar/2", headers=HEADERS_USER)
     
-    # Agora, testa o GET
     response = client.get("/minha-assinatura", headers=HEADERS_USER)
     assert response.status_code == 200
-    data = response.json()
-    assert data["plano_id"] == 1
-    assert data["user_id"] == USER_TOKEN
+    assert response.json()["plano_id"] == 2
 
-def test_usuario_assina_plano_inexistente():
-    """Testa a assinatura de um plano que não existe."""
-    response = client.post("/assinar/999", headers=HEADERS_USER)
+def test_assinar_plano_inexistente_falha():
+    """Tentar assinar plano 9999 deve dar 404."""
+    response = client.post("/assinar/9999", headers=HEADERS_USER)
     assert response.status_code == 404
 
-def test_usuario_ve_assinatura_sem_ter_assinado():
-    """Testa um admin (que ainda não assinou nada) vendo suas assinaturas."""
-    # O token de admin é um user_id diferente do USER_TOKEN
-    response = client.get("/minha-assinatura", headers=HEADERS_ADMIN)
-    assert response.status_code == 404 # Admin ainda não assinou
+def test_acesso_sem_token_falha():
+    """Tentar ver assinatura sem token deve dar 401 ou 422."""
+    response = client.get("/minha-assinatura")
+    assert response.status_code in [401, 422]

@@ -1,4 +1,7 @@
 fastapi
-uvicorn[standard]
-pytest
+uvicorn
+pydantic
 httpx
+pytest
+pytest-cov
+requests

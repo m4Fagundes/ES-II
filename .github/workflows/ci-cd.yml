@@ -1,41 +1,52 @@
+name: CI - Pipeline de Testes Python
+
+# Gatilhos: Roda em push e pull request para a main
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
   test:
+    # Nome do job que aparecerá no GitHub
+    name: Executar Testes Unitários e de Integração
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
+        # Testamos na versão estável mais comum atualmente
         python-version: ["3.10"]
 
     steps:
+      # 1. Baixa o código do repositório
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      # 2. Configura o Python na máquina virtual
       - name: Configurar Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: pip
+          cache: 'pip' # Ativa cache para acelerar builds futuros
 
-      # GARANTE que o Python encontre a pasta api/ (Melhor como primeiro passo)
-      - name: Adicionar raiz ao PYTHONPATH
-        run: echo "PYTHONPATH=$(pwd)" >> $GITHUB_ENV
-
-      - name: Instalar dependências (Incluindo pytest-cov para cobertura)
+      # 3. Instala dependências
+      - name: Instalar dependências
         run: |
           python -m pip install --upgrade pip
-          # Instala todas as dependências listadas no requirements.txt
-          pip install -r requirements.txt
-          # Instala o pacote pytest-cov para medir a cobertura
-          pip install pytest-cov
-          # Opcional: Instala o projeto local em modo editável (necessita de setup.py ou pyproject.toml)
-          # pip install -e .
+          # Instala as dependências do projeto (fastapi, uvicorn, pydantic, httpx, etc.)
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          # Instala ferramentas específicas de teste
+          pip install pytest pytest-cov httpx
 
-      - name: Rodar Pytest e Gerar Cobertura
-        # O argumento --cov=api irá calcular a cobertura apenas sobre o código dentro do diretório 'api'
-        run: pytest -vv --cov=api
-      
+      # 4. Configura o PYTHONPATH
+      # Garante que o Python encontre a pasta 'api' como um pacote raiz
+      - name: Adicionar raiz ao PYTHONPATH
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
+
+      # 5. Executa os testes com cobertura
+      # -v: verbose (mostra cada teste rodando)
+      # --cov=api: mede quanto do código na pasta 'api' foi testado
+      - name: Rodar Pytest com Cobertura
+        run: |
+          pytest -v --cov=api tests/
