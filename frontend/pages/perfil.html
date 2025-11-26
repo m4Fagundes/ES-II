@@ -1,9 +1,7 @@
 <div class="space-y-6 animate-fade-in pb-10">
 
-    <!-- SEÇÃO 1: CABEÇALHO E DADOS DO CLIENTE -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Cartão do Assinante -->
         <div class="bg-white p-6 rounded-[2rem] border border-slate-200 shadow-sm relative overflow-hidden group">
             <div class="absolute top-0 right-0 p-4 opacity-5">
                 <i class="ph-fill ph-user-circle text-9xl text-slate-800"></i>
@@ -11,12 +9,12 @@
             
             <div class="flex items-center gap-4 mb-6 relative z-10">
                 <div class="w-16 h-16 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 p-0.5 shadow-lg shadow-brand-200">
-                    <div class="w-full h-full bg-white rounded-full flex items-center justify-center text-brand-600 font-bold text-xl">
-                        MJ
+                    <div id="profile-initials" class="w-full h-full bg-white rounded-full flex items-center justify-center text-brand-600 font-bold text-xl uppercase">
+                        --
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-xl font-bold text-slate-800">Maria Joana</h3>
+                    <h3 id="profile-name" class="text-xl font-bold text-slate-800">Carregando...</h3>
                     <div class="flex items-center gap-1.5 text-xs font-medium text-slate-500 bg-slate-100 px-2 py-1 rounded-full w-fit mt-1">
                         <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span>
                         Cliente Ativo
@@ -30,26 +28,24 @@
                     <span class="font-mono font-bold text-slate-700">#94821-X</span>
                 </div>
                 <div class="flex justify-between text-sm border-b border-slate-50 pb-2">
-                    <span class="text-slate-400">CPF/CNPJ</span>
+                    <span class="text-slate-400">CPF</span>
                     <span class="font-mono font-bold text-slate-700">***.456.789-**</span>
                 </div>
                 <div class="flex justify-between text-sm pb-1">
                     <span class="text-slate-400">Instalação</span>
-                    <span class="font-bold text-slate-700 text-right text-xs max-w-[150px]">Rua das Flores, 123<br>Apto 402 - Centro</span>
+                    <span class="font-bold text-slate-700 text-right text-xs max-w-[150px]">Rua das Flores, 123<br>Centro</span>
                 </div>
             </div>
         </div>
 
-        <!-- Cartão do Plano Atual (Destaque) -->
         <div class="lg:col-span-2 bg-slate-900 rounded-[2rem] p-8 text-white relative overflow-hidden flex flex-col justify-between shadow-xl shadow-slate-900/20">
-            <!-- Background Decor -->
             <div class="absolute top-0 right-0 w-64 h-64 bg-brand-500 rounded-full blur-[100px] opacity-20 -mr-16 -mt-16 pointer-events-none"></div>
             <div class="absolute bottom-0 left-0 w-64 h-64 bg-purple-500 rounded-full blur-[100px] opacity-20 -ml-16 -mb-16 pointer-events-none"></div>
 
             <div class="relative z-10 flex justify-between items-start">
                 <div>
                     <div class="text-slate-400 text-sm font-bold uppercase tracking-widest mb-1">Plano Atual</div>
-                    <h2 id="current-plan-name" class="text-3xl font-black text-white">Carregando...</h2>
+                    <h2 id="current-plan-name" class="text-3xl font-black text-white">Verificando...</h2>
                 </div>
                 <div class="bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 flex items-center gap-2">
                     <i class="ph-fill ph-check-circle text-green-400"></i>
@@ -77,23 +73,20 @@
                 </div>
             </div>
             
-            <!-- Barra de Progresso Decorativa -->
             <div class="mt-6 pt-6 border-t border-white/10 relative z-10">
                 <div class="flex justify-between text-xs text-slate-400 mb-2">
                     <span>Consumo Mensal (Estimado)</span>
-                    <span class="text-white">450 GB / <span class="text-brand-400">Ilimitado</span></span>
+                    <span class="text-white">-- / <span class="text-brand-400">Ilimitado</span></span>
                 </div>
                 <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
-                    <div class="bg-gradient-to-r from-brand-500 to-purple-500 w-[35%] h-full rounded-full"></div>
+                    <div class="bg-gradient-to-r from-brand-500 to-purple-500 w-[10%] h-full rounded-full"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- SEÇÃO 2: STATUS TÉCNICO E FATURAS ("A LINGUIÇA") -->
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        <!-- Status do Equipamento -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-40">
             <div class="flex justify-between items-start">
                 <div>
@@ -113,7 +106,6 @@
             </div>
         </div>
 
-        <!-- Dispositivos -->
         <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-40">
             <div class="flex justify-between items-start">
                 <div>
@@ -122,34 +114,20 @@
                 </div>
                 <i class="ph-duotone ph-devices text-2xl text-purple-500"></i>
             </div>
-            <div class="text-3xl font-black text-slate-800">08 <span class="text-xs font-medium text-slate-400 align-middle">Online</span></div>
+            <div class="text-3xl font-black text-slate-800">03 <span class="text-xs font-medium text-slate-400 align-middle">Online</span></div>
         </div>
 
-        <!-- Últimas Faturas -->
         <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col h-40 relative overflow-hidden">
             <div class="text-xs text-slate-400 font-bold uppercase mb-3 flex justify-between items-center">
-                <span>Histórico Financeiro</span>
-                <button class="text-brand-600 hover:underline">Ver tudo</button>
+                <span>Histórico Financeiro (Simulado)</span>
             </div>
             <div class="space-y-2 overflow-y-auto no-scrollbar">
-                <!-- Fatura 1 -->
                 <div class="flex items-center justify-between p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition">
                     <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center"><i class="ph-bold ph-check"></i></div>
                         <div>
-                            <div class="text-xs font-bold text-slate-700">Fatura Outubro</div>
-                            <div class="text-[10px] text-slate-400">Pago em 10/10</div>
-                        </div>
-                    </div>
-                    <div class="text-sm font-bold text-slate-700">R$ <span class="val-fatura">--</span></div>
-                </div>
-                <!-- Fatura 2 -->
-                <div class="flex items-center justify-between p-2 bg-slate-50 rounded-lg opacity-60">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center"><i class="ph-bold ph-check"></i></div>
-                        <div>
-                            <div class="text-xs font-bold text-slate-700">Fatura Setembro</div>
-                            <div class="text-[10px] text-slate-400">Pago em 10/09</div>
+                            <div class="text-xs font-bold text-slate-700">Fatura Atual</div>
+                            <div class="text-[10px] text-slate-400">Vencimento dia 10</div>
                         </div>
                     </div>
                     <div class="text-sm font-bold text-slate-700">R$ <span class="val-fatura">--</span></div>
@@ -158,7 +136,6 @@
         </div>
     </div>
 
-    <!-- SEÇÃO 3: TROCAR DE PLANO (O CONTEÚDO ORIGINAL) -->
     <div class="pt-8 border-t border-slate-200">
         <div class="flex items-center justify-between mb-6">
             <div>
@@ -167,83 +144,113 @@
             </div>
         </div>
 
-        <!-- Grid de Planos (Container onde o JS injeta os cards) -->
         <div id="perfil-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            <!-- Skeleton Loader -->
             <div class="col-span-3 py-12 flex justify-center text-slate-300">
                 <i class="ph-bold ph-spinner animate-spin text-4xl"></i>
             </div>
         </div>
     </div>
     
-    <!-- Aviso Legal -->
     <div class="bg-slate-100 rounded-xl p-4 text-xs text-slate-500 text-center leading-relaxed">
-        * A troca de plano pode implicar em renovação do período de fidelidade por mais 12 meses. 
-        O valor da primeira fatura será cobrado pro-rata (proporcional aos dias de uso).
+        * A troca de plano pode implicar em renovação do período de fidelidade. 
         Para cancelamentos, entre em contato via <a href="#" onclick="loadPage('chat')" class="text-brand-600 font-bold hover:underline">Chat</a>.
     </div>
 
 </div>
 
-<!-- Script Específico desta Página -->
 <script>
     (function initPerfil() {
+        // --- 1. Atualiza Dados do Usuário (Nome/Iniciais) ---
+        const userName = localStorage.getItem('user_name') || 'Cliente ProvedorNet';
+        document.getElementById('profile-name').innerText = userName;
+        
+        // Gera iniciais (Ex: "Maria Joana" -> "MJ")
+        const initials = userName.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase();
+        document.getElementById('profile-initials').innerText = initials;
+
+        // --- 2. Renderização da Tela ---
         const container = document.getElementById('perfil-content');
         
-        // Atualiza a "linguiça" (dados fictícios que dependem do plano real)
         function updateDashboardHeader(currentPlan) {
+            const elName = document.getElementById('current-plan-name');
+            const elSpeed = document.getElementById('current-plan-speed');
+            const elPrice = document.getElementById('current-plan-price');
+            const elFaturas = document.querySelectorAll('.val-fatura');
+
             if (!currentPlan) {
-                document.getElementById('current-plan-name').innerText = "Sem Plano Ativo";
+                elName.innerText = "Nenhum Plano";
+                elName.classList.add('text-slate-400');
+                elSpeed.innerText = "0";
+                elPrice.innerText = "R$ 0,00";
+                elFaturas.forEach(el => el.innerText = "--");
                 return;
             }
 
-            document.getElementById('current-plan-name').innerText = currentPlan.nome;
-            document.getElementById('current-plan-speed').innerText = currentPlan.velocidade_mbps;
-            document.getElementById('current-plan-price').innerText = `R$ ${currentPlan.preco_mensal.toFixed(2)}`;
+            elName.innerText = currentPlan.nome;
+            elName.classList.remove('text-slate-400');
+            elSpeed.innerText = currentPlan.velocidade_mbps;
+            elPrice.innerText = `R$ ${currentPlan.preco_mensal.toFixed(2).replace('.', ',')}`;
 
-            // Atualiza os valores fictícios das faturas para bater com o plano atual
-            document.querySelectorAll('.val-fatura').forEach(el => {
+            // Atualiza faturas simuladas
+            elFaturas.forEach(el => {
                 el.innerText = currentPlan.preco_mensal.toFixed(2).replace('.', ',');
             });
         }
 
-        // Função para renderizar os planos
         function render() {
-            if (!window.appData || !window.appData.planos) return;
+            // Pega dados globais carregados pelo index.html
+            const planos = window.appData?.planos || [];
+            const assinatura = window.appData?.assinatura;
 
             // Ordena planos por preço
-            const planosSorted = [...window.appData.planos].sort((a, b) => a.preco_mensal - b.preco_mensal);
+            const planosSorted = [...planos].sort((a, b) => a.preco_mensal - b.preco_mensal);
             
-            // Acha plano atual
-            const currentPlanId = window.appData.assinatura?.plano_id;
-            const currentPlan = window.appData.planos.find(p => p.id === currentPlanId);
+            // Identifica plano atual
+            const currentPlanId = assinatura?.plano_id;
+            const currentPlan = planos.find(p => p.id === currentPlanId);
             
-            // Atualiza o topo da página
             updateDashboardHeader(currentPlan);
 
             let html = '';
             
+            if (planosSorted.length === 0) {
+                container.innerHTML = '<div class="col-span-3 text-center text-slate-500">Nenhum plano disponível para assinatura no momento.</div>';
+                return;
+            }
+
             planosSorted.forEach(p => {
                 const isAtivo = currentPlanId === p.id;
+                // Lógica de Upgrade: Se não tem plano, tudo é upgrade. Se tem, compara preços.
                 const isUpgrade = currentPlan ? (p.preco_mensal > currentPlan.preco_mensal) : true;
-                const isDestaque = p.velocidade_mbps >= 300; 
+                const isDestaque = p.velocidade_mbps >= 500; 
 
-                // Estilos
-                const opacityClass = isAtivo ? 'opacity-50 grayscale cursor-not-allowed' : '';
+                // Estilização condicional
+                const opacityClass = isAtivo ? 'opacity-60 grayscale-[0.5]' : '';
                 const borderClass = isAtivo 
-                    ? 'border-slate-100' 
+                    ? 'border-slate-200 ring-4 ring-slate-50' 
                     : (isDestaque ? 'border-brand-200 shadow-lg shadow-brand-100 scale-[1.01]' : 'border-slate-200 hover:border-brand-300');
                 
+                // Botão
+                let btnHtml = '';
+                if (isAtivo) {
+                    btnHtml = `<button disabled class="w-full py-3 rounded-xl font-bold text-sm bg-slate-100 text-slate-400 cursor-not-allowed">Plano Atual</button>`;
+                } else {
+                    btnHtml = `<button onclick="changePlan(${p.id})" 
+                        class="w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 bg-white border-2 border-slate-100 text-slate-600 hover:border-brand-600 hover:text-brand-600 hover:bg-brand-50">
+                        ${isUpgrade ? 'Fazer Upgrade <i class="ph-bold ph-arrow-up"></i>' : 'Selecionar Plano'}
+                    </button>`;
+                }
+
                 html += `
-                <div class="bg-white p-6 rounded-[1.5rem] border ${borderClass} ${opacityClass} transition-all duration-300 flex flex-col relative group">
+                <div class="bg-white p-6 rounded-[1.5rem] border ${borderClass} ${opacityClass} transition-all duration-300 flex flex-col relative group h-full">
                     
                     ${isUpgrade && !isAtivo ? 
-                        `<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm">UPGRADE</div>` : ''
+                        `<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full shadow-sm tracking-wider">RECOMENDADO</div>` : ''
                     }
 
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="font-bold text-slate-600 uppercase tracking-wide text-sm">${p.nome}</h3>
-                        ${isAtivo ? '<span class="text-xs font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded">ATUAL</span>' : ''}
+                        ${isAtivo ? '<span class="text-[10px] font-bold text-white bg-slate-400 px-2 py-1 rounded">SEU PLANO</span>' : ''}
                     </div>
                     
                     <div class="flex items-baseline gap-1 mb-6">
@@ -268,11 +275,7 @@
                         <div class="text-2xl font-black text-slate-800 mb-3">
                             <span class="text-xs font-medium text-slate-400 align-top">R$</span>${p.preco_mensal.toFixed(2).replace('.', ',')}
                         </div>
-                        <button onclick="changePlan(${p.id})" ${isAtivo ? 'disabled' : ''} 
-                            class="w-full py-3 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2
-                            ${isAtivo ? 'bg-slate-100 text-slate-400' : 'bg-white border-2 border-slate-100 text-slate-600 hover:border-brand-600 hover:text-brand-600'}">
-                            ${isAtivo ? 'Plano Atual' : (isUpgrade ? 'Fazer Upgrade <i class="ph-bold ph-arrow-up"></i>' : 'Trocar Plano')}
-                        </button>
+                        ${btnHtml}
                     </div>
                 </div>`;
             });
@@ -280,16 +283,14 @@
             container.innerHTML = html;
         }
 
-        // Função Local de Troca (Chama a global do index)
+        // Função Local de Troca que chama a Global
         window.changePlan = async (id) => {
+            // Chama a função assinar definida no index.html
             if(typeof window.assinar === 'function') {
                 await window.assinar(id);
-                // Como assinar() recarrega os dados globais, basta chamar render de novo
+                // Após o alerta de sucesso do index, re-renderiza esta tela
                 render(); 
-                
-                // Feedback visual de sucesso
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-                // Aqui você poderia chamar um Toast se tivesse um global, mas o update visual já serve
             }
         }
 

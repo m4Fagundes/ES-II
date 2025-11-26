@@ -1,0 +1,132 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 animate-fade-in">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-3xl shadow-xl border border-slate-100">
+        
+        <div class="text-center">
+            <i class="ph-fill ph-paper-plane-tilt text-brand-600 text-5xl"></i>
+            <h2 class="mt-6 text-3xl font-black text-slate-900" id="auth-title">Acesse sua conta</h2>
+            <p class="mt-2 text-sm text-slate-600">Gerencie sua internet de ultra velocidade</p>
+        </div>
+
+        <form class="mt-8 space-y-6" id="auth-form" onsubmit="handleAuth(event)">
+            
+            <div id="field-name" class="hidden">
+                <label for="nome" class="sr-only">Nome Completo</label>
+                <input id="nome" name="nome" type="text" placeholder="Nome Completo" 
+                    class="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm mb-4">
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label for="email-address" class="sr-only">Email</label>
+                    <input id="email-address" name="email" type="email" required placeholder="Endereço de Email"
+                        class="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Senha</label>
+                    <input id="password" name="password" type="password" required placeholder="Senha"
+                        class="appearance-none rounded-xl relative block w-full px-4 py-3 border border-slate-300 placeholder-slate-500 text-slate-900 focus:outline-none focus:ring-brand-500 focus:border-brand-500 sm:text-sm">
+                </div>
+            </div>
+
+            <div id="error-msg" class="text-red-500 text-sm text-center hidden font-bold"></div>
+
+            <div>
+                <button type="submit" id="btn-submit"
+                    class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-xl text-white bg-brand-600 hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition shadow-lg shadow-brand-500/30">
+                    <span id="btn-text">Entrar</span>
+                </button>
+            </div>
+        </form>
+        
+        <div class="text-center mt-4">
+            <button onclick="toggleAuthMode()" class="text-sm font-medium text-brand-600 hover:text-brand-500">
+                <span id="toggle-text">Não tem conta? Cadastre-se grátis</span>
+            </button>
+        </div>
+        
+        <div class="mt-6 border-t border-slate-100 pt-4 text-center">
+            <button onclick="loadPage('landing')" class="text-xs text-slate-400 hover:text-slate-600">
+                <i class="ph-bold ph-arrow-left"></i> Voltar para Home
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Variável local para controlar estado
+    var isRegister = false;
+
+    // Função anexada ao window para ser acessível pelo HTML
+    window.toggleAuthMode = function() {
+        isRegister = !isRegister;
+        const title = document.getElementById('auth-title');
+        const btn = document.getElementById('btn-text');
+        const toggle = document.getElementById('toggle-text');
+        const fieldName = document.getElementById('field-name');
+        const errorMsg = document.getElementById('error-msg');
+
+        errorMsg.classList.add('hidden'); // Limpa erros
+
+        if (isRegister) {
+            title.innerText = "Crie sua conta";
+            btn.innerText = "Cadastrar";
+            toggle.innerText = "Já tem conta? Fazer Login";
+            fieldName.classList.remove('hidden');
+            document.getElementById('nome').required = true;
+        } else {
+            title.innerText = "Acesse sua conta";
+            btn.innerText = "Entrar";
+            toggle.innerText = "Não tem conta? Cadastre-se grátis";
+            fieldName.classList.add('hidden');
+            document.getElementById('nome').required = false;
+        }
+    };
+
+    window.handleAuth = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('email-address').value;
+        const password = document.getElementById('password').value;
+        const nome = document.getElementById('nome').value;
+        const btn = document.getElementById('btn-submit');
+        const errorMsg = document.getElementById('error-msg');
+
+        // Feedback visual de loading
+        btn.disabled = true;
+        btn.classList.add('opacity-70');
+        errorMsg.classList.add('hidden');
+
+        // Define endpoint baseado no estado
+        const endpoint = isRegister ? '/auth/register' : '/auth/login';
+        // Payload condicional
+        const payload = isRegister ? { email, password, nome } : { email, password };
+
+        try {
+            const res = await fetch(`http://127.0.0.1:8000${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.detail || 'Erro na autenticação');
+            }
+
+            // SUCESSO! Salva os dados no navegador
+            localStorage.setItem('token', data.access_token);
+            localStorage.setItem('user_name', data.user_name);
+            localStorage.setItem('role', data.role);
+
+            // Recarrega a página para o index.html assumir o controle
+            location.reload(); 
+
+        } catch (err) {
+            console.error(err);
+            errorMsg.innerText = err.message;
+            errorMsg.classList.remove('hidden');
+            btn.disabled = false;
+            btn.classList.remove('opacity-70');
+        }
+    };
+</script>
