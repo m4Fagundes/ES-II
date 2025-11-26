@@ -131,3 +131,14 @@ def get_dados_financeiros():
         "ticket_medio": ticket_medio,
         "planos_vendidos": contagem_planos
     }
+    
+# --- Adicione isto no final do arquivo api/database.py ---
+
+def get_user_by_token(token: str):
+    """
+    Varre o banco de usuários para encontrar quem é dono deste token.
+    """
+    for email, user in _db_users.items():
+        if user.get("id") == token:
+            return user
+    return None
