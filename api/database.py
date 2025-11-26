@@ -81,3 +81,53 @@ def create_assinatura(user_id: str, plano_id: int) -> models.Assinatura:
     _db_assinaturas[user_id] = assinatura
     logger.info(f"Usuário {user_id} assinou/atualizou o plano {plano_id}.")
     return assinatura
+
+_db_users = {
+    "admin@admin.com": {"email": "admin@admin.com", "password": "123", "nome": "Administrador", "role": "admin", "id": "admin-secret-token"},
+    "user@user.com": {"email": "user@user.com", "password": "123", "nome": "Cliente Teste", "role": "user", "id": "user-normal-token"}
+}   
+
+# --- Funções de Auth ---
+def get_user_by_email(email: str):
+    return _db_users.get(email)
+
+def create_user(user_data: models.UserCreate):
+    if user_data.email in _db_users:
+        return None
+    # Simulando geração de token simples
+    fake_token = f"token-{user_data.email}"
+    new_user = {
+        "email": user_data.email,
+        "password": user_data.password, # Em prod, use hash!
+        "nome": user_data.nome,
+        "role": "user",
+        "id": fake_token
+    }
+    _db_users[user_data.email] = new_user
+    return new_user
+
+# --- Função Financeira para o Admin ---
+def get_dados_financeiros():
+    total_receita = 0.0
+    contagem_planos = {}
+    
+    # Itera sobre todas as assinaturas
+    for user_id, assinatura in _db_assinaturas.items():
+        if assinatura.status == "ativo":
+            plano = _db_planos.get(assinatura.plano_id)
+            if plano:
+                total_receita += plano.preco_mensal
+                
+                # Contagem por tipo de plano
+                nome = plano.nome
+                contagem_planos[nome] = contagem_planos.get(nome, 0) + 1
+                
+    total_users = len(_db_assinaturas)
+    ticket_medio = (total_receita / total_users) if total_users > 0 else 0
+    
+    return {
+        "total_receita_mensal": total_receita,
+        "total_assinantes": total_users,
+        "ticket_medio": ticket_medio,
+        "planos_vendidos": contagem_planos
+    }

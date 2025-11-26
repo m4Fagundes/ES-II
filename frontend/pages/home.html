@@ -1,189 +1,88 @@
 <div class="space-y-8 animate-fade-in pb-10">
     
-    <!-- Banner de Boas-Vindas (ESTÁTICO para garantir a cor) -->
-    <!-- Usamos style inline para garantir o gradiente mesmo se o Tailwind demorar um milissegundo -->
-    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-8 md:p-10 text-white shadow-xl shadow-blue-900/20 relative overflow-hidden group" style="background: linear-gradient(to right, #2563eb, #1e40af);">
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-3xl p-8 text-white shadow-xl relative overflow-hidden group">
         <div class="relative z-10 max-w-2xl">
             <h3 class="text-3xl font-bold mb-2">Painel de Controle</h3>
-            <p class="text-blue-100 mb-8 text-lg font-medium opacity-90">
-                Gerencie sua conexão fibra óptica com facilidade. O que você deseja fazer agora?
-            </p>
-            
+            <p class="text-blue-100 mb-6 font-medium opacity-90">Gerencie sua conexão com facilidade.</p>
             <div class="flex flex-wrap gap-4">
-                <!-- Botão Speedtest -->
-                <button onclick="loadPage('speedtest')" class="bg-white text-blue-700 px-6 py-3.5 rounded-xl font-bold shadow-lg hover:bg-blue-50 transition-all flex items-center gap-3 hover:-translate-y-1 transform active:scale-95">
-                    <div class="bg-blue-100 p-1.5 rounded-lg"><i class="ph-bold ph-gauge text-xl"></i></div>
-                    Testar Minha Velocidade
+                <button onclick="loadPage('speedtest')" class="bg-white text-blue-700 px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-blue-50 transition flex items-center gap-2">
+                    <i class="ph-bold ph-gauge"></i> Testar Velocidade
                 </button>
-                
-                <!-- Botão Chatbot -->
-                <button onclick="loadPage('chat')" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3.5 rounded-xl font-bold backdrop-blur-md border border-white/20 transition-all flex items-center gap-3 hover:-translate-y-1 transform active:scale-95">
-                    <div class="bg-white/20 p-1.5 rounded-lg"><i class="ph-bold ph-robot text-xl"></i></div>
-                    Tirar Dúvidas com IA
+                <button onclick="loadPage('chat')" class="bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl font-bold backdrop-blur-md transition flex items-center gap-2">
+                    <i class="ph-bold ph-robot"></i> Falar com IA
                 </button>
             </div>
         </div>
-        
-        <!-- Decoração -->
-        <i class="ph-duotone ph-waves absolute -right-16 -bottom-24 text-[22rem] text-white opacity-10 group-hover:opacity-15 transition-opacity duration-1000"></i>
+        <i class="ph-duotone ph-waves absolute -right-10 -bottom-20 text-[20rem] text-white opacity-10"></i>
     </div>
 
-    <!-- Grid de Status -->
-    <div id="home-stats" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- 1. Card do Plano (Manipulado via JS por IDs) -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-48 relative overflow-hidden group hover:border-blue-300 transition-colors">
-            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition">
-                <i class="ph-fill ph-lightning text-6xl text-blue-600"></i>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-48">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i class="ph-bold ph-rocket-launch"></i></div>
+                <span class="text-xs font-bold text-slate-400 uppercase">Seu Plano</span>
             </div>
             
-            <!-- Estado: Carregando -->
-            <div id="plano-loading" class="animate-pulse space-y-4">
-                <div class="h-4 bg-slate-200 rounded w-1/3"></div>
-                <div class="h-8 bg-slate-200 rounded w-3/4"></div>
-                <div class="h-6 bg-slate-200 rounded w-1/4"></div>
+            <div id="plano-info">
+                <div class="animate-pulse h-6 bg-slate-200 rounded w-3/4 mb-2"></div>
+                <div class="animate-pulse h-4 bg-slate-200 rounded w-1/2"></div>
             </div>
 
-            <!-- Estado: Com Plano -->
-            <div id="plano-active" class="hidden h-full flex flex-col justify-between relative z-10">
-                <div>
-                    <div class="flex items-center gap-2 mb-2">
-                        <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i class="ph-bold ph-rocket-launch"></i></div>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Seu Plano</span>
-                    </div>
-                    <div id="plano-nome" class="text-2xl font-black text-slate-800 truncate">--</div>
-                    <div class="text-blue-600 font-bold flex items-center gap-1 mt-1">
-                        <i class="ph-fill ph-arrow-up-right"></i> <span id="plano-speed">--</span> Mega
-                    </div>
-                </div>
-                <div class="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
-                    <span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-md border border-green-100">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Ativo
-                    </span>
-                    <button onclick="loadPage('perfil')" class="text-xs font-bold text-slate-400 hover:text-blue-600 transition">Alterar</button>
-                </div>
-            </div>
-
-            <!-- Estado: Sem Plano -->
-            <div id="plano-empty" class="hidden h-full flex flex-col items-center justify-center text-center relative z-10">
-                <div class="text-yellow-500 text-3xl mb-2"><i class="ph-duotone ph-warning-circle"></i></div>
-                <div class="font-bold text-slate-700">Sem Plano Ativo</div>
-                <button onclick="loadPage('perfil')" class="mt-3 text-xs bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-bold">Contratar Agora</button>
+            <div class="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
+                <span class="inline-flex items-center gap-1.5 text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-md">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Ativo
+                </span>
+                <button onclick="loadPage('perfil')" class="text-xs font-bold text-blue-600 hover:underline">Alterar</button>
             </div>
         </div>
 
-        <!-- 2. Card de Fatura -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-48 hover:border-green-300 transition-colors cursor-default">
-            <div>
-                <div class="flex items-center gap-2 mb-2">
-                    <div class="p-2 bg-green-100 text-green-600 rounded-lg"><i class="ph-bold ph-receipt"></i></div>
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wide">Faturas</span>
-                </div>
-                <div class="text-2xl font-bold text-slate-800">Em dia</div>
-                <p class="text-sm text-slate-500 mt-1">Nenhuma pendência financeira.</p>
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-48">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="p-2 bg-green-100 text-green-600 rounded-lg"><i class="ph-bold ph-receipt"></i></div>
+                <span class="text-xs font-bold text-slate-400 uppercase">Faturas</span>
             </div>
-            <div class="w-full bg-slate-100 rounded-full h-1.5 mt-4 overflow-hidden">
-                <div class="bg-green-500 h-full w-full"></div>
-            </div>
+            <div class="text-2xl font-bold text-slate-800">Em dia</div>
+            <p class="text-sm text-slate-500 mt-1">Próximo vencimento: 10/12</p>
         </div>
-
-        <!-- 3. Card de Suporte -->
-        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between h-48 cursor-pointer hover:shadow-md transition-all hover:-translate-y-1 group" onclick="loadPage('chat')">
-            <div>
-                <div class="flex items-center justify-between mb-3">
-                    <div class="p-2 bg-purple-100 text-purple-600 rounded-lg group-hover:bg-purple-600 group-hover:text-white transition-colors">
-                        <i class="ph-bold ph-lifebuoy"></i>
-                    </div>
-                    <span class="bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                        <span class="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></span> Online
-                    </span>
-                </div>
-                <h4 class="text-lg font-bold text-slate-800">Precisa de Ajuda?</h4>
-                <p class="text-sm text-slate-500 mt-1 line-clamp-2">Nossa IA pode resolver problemas de conexão agora mesmo.</p>
+        
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-48 cursor-pointer hover:shadow-md transition" onclick="loadPage('chat')">
+            <div class="flex items-center gap-2 mb-4">
+                <div class="p-2 bg-purple-100 text-purple-600 rounded-lg"><i class="ph-bold ph-lifebuoy"></i></div>
+                <span class="text-xs font-bold text-slate-400 uppercase">Suporte</span>
             </div>
-            <div class="text-purple-600 text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">
-                Iniciar Chat <i class="ph-bold ph-arrow-right"></i>
-            </div>
-        </div>
-    </div>
-
-    <!-- Atalhos Rápidos -->
-    <div>
-        <h4 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 ml-1">Acesso Rápido</h4>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <button onclick="loadPage('perfil')" class="p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition flex items-center gap-3 group text-left">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-blue-200 group-hover:text-blue-700 transition">
-                    <i class="ph-bold ph-arrows-left-right"></i>
-                </div>
-                <div>
-                    <div class="font-bold text-slate-700 text-sm group-hover:text-blue-800">Mudar Plano</div>
-                    <div class="text-xs text-slate-400">Upgrade</div>
-                </div>
-            </button>
-
-            <button onclick="alert('Em breve!')" class="p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition flex items-center gap-3 group text-left">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-blue-200 group-hover:text-blue-700 transition">
-                    <i class="ph-bold ph-file-text"></i>
-                </div>
-                <div>
-                    <div class="font-bold text-slate-700 text-sm group-hover:text-blue-800">2ª Via</div>
-                    <div class="text-xs text-slate-400">Fatura</div>
-                </div>
-            </button>
-
-            <button onclick="window.open('https://wa.me/5511999999999', '_blank')" class="p-4 bg-white border border-slate-200 rounded-xl hover:border-green-300 hover:bg-green-50 transition flex items-center gap-3 group text-left">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-green-200 group-hover:text-green-700 transition">
-                    <i class="ph-bold ph-whatsapp-logo"></i>
-                </div>
-                <div>
-                    <div class="font-bold text-slate-700 text-sm group-hover:text-green-800">WhatsApp</div>
-                    <div class="text-xs text-slate-400">Suporte</div>
-                </div>
-            </button>
-            
-            <button onclick="loadPage('speedtest')" class="p-4 bg-white border border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition flex items-center gap-3 group text-left">
-                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 group-hover:bg-blue-200 group-hover:text-blue-700 transition">
-                    <i class="ph-bold ph-wifi-high"></i>
-                </div>
-                <div>
-                    <div class="font-bold text-slate-700 text-sm group-hover:text-blue-800">Diagnóstico</div>
-                    <div class="text-xs text-slate-400">Rede</div>
-                </div>
-            </button>
+            <h4 class="font-bold text-slate-800">Precisa de Ajuda?</h4>
+            <p class="text-sm text-slate-500 mt-1">Fale com nossa IA agora.</p>
         </div>
     </div>
 </div>
 
-<!-- Script Estável para Atualizar Dados -->
 <script>
-    (function updateHome() {
-        // Seleciona elementos
-        const elLoading = document.getElementById('plano-loading');
-        const elActive = document.getElementById('plano-active');
-        const elEmpty = document.getElementById('plano-empty');
+    // Script executado ao injetar o HTML
+    (function updateHomeData() {
+        const container = document.getElementById('plano-info');
         
-        // Garante que começa no loading
-        elLoading.classList.remove('hidden');
-        elActive.classList.add('hidden');
-        elEmpty.classList.add('hidden');
+        // Dados já foram carregados pelo index.html
+        const assinatura = window.appData?.assinatura;
+        const planos = window.appData?.planos || [];
 
-        // Acessa dados globais (appData) carregados pelo index.html
-        if (window.appData && window.appData.assinatura) {
-            const p = window.appData.planos.find(x => x.id === window.appData.assinatura.plano_id);
-            if (p) {
-                // Preenche dados
-                document.getElementById('plano-nome').innerText = p.nome;
-                document.getElementById('plano-speed').innerText = p.velocidade_mbps;
-                
-                // Mostra card ativo
-                elLoading.classList.add('hidden');
-                elActive.classList.remove('hidden');
-                return;
+        if (assinatura) {
+            const planoAtual = planos.find(p => p.id === assinatura.plano_id);
+            if (planoAtual) {
+                container.innerHTML = `
+                    <div class="text-2xl font-black text-slate-800">${planoAtual.nome}</div>
+                    <div class="text-blue-600 font-bold flex items-center gap-1 mt-1">
+                        <i class="ph-fill ph-arrow-up-right"></i> ${planoAtual.velocidade_mbps} Mega
+                    </div>
+                `;
+            } else {
+                container.innerHTML = '<div class="text-red-500 font-bold">Plano não encontrado (ID antigo?)</div>';
             }
+        } else {
+            container.innerHTML = `
+                <div class="text-slate-500 font-medium">Nenhum plano ativo</div>
+                <button onclick="loadPage('perfil')" class="text-sm text-blue-600 font-bold mt-1">Contratar Agora</button>
+            `;
         }
-        
-        // Se chegou aqui, não tem plano
-        elLoading.classList.add('hidden');
-        elEmpty.classList.remove('hidden');
     })();
 </script>

@@ -5,7 +5,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 # Importamos todos os routers, incluindo os novos
-from api.routers import planos, usuarios, admin, chatbot, speedtest
+from api.routers import planos, usuarios, admin, chatbot, speedtest, auth
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,6 +32,7 @@ app.include_router(usuarios.router)
 app.include_router(admin.router)
 app.include_router(chatbot.router)
 app.include_router(speedtest.router)
+app.include_router(auth.router)
 
 @app.get("/", tags=["Root"])
 async def read_root():

@@ -37,3 +37,26 @@ class ChatMensagem(BaseModel):
 
 class ChatResposta(BaseModel):
     resposta: str
+    
+# --- NOVO: Modelos de Usuário e Auth ---
+class UserCreate(BaseModel):
+    email: str
+    password: str
+    nome: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user_name: str
+    role: str
+
+# --- NOVO: Modelos Financeiros (Admin) ---
+class DashboardFinanceiro(BaseModel):
+    total_receita_mensal: float
+    total_assinantes: int
+    ticket_medio: float
+    planos_vendidos: dict[str, int]

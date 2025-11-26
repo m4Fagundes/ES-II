@@ -26,3 +26,8 @@ async def deletar_plano(plano_id: int):
     if not sucesso:
         raise HTTPException(status_code=404, detail="Plano não encontrado")
     return
+
+@router.get("/financeiro", response_model=models.DashboardFinanceiro)
+async def obter_receita():
+    """Retorna dados consolidados para o dashboard financeiro."""
+    return database.get_dados_financeiros()
